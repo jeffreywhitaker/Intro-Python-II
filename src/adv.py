@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -38,6 +39,18 @@ room['treasure'].s_to = room['narrow']
 #
 
 # Make a new player object that is currently in the 'outside' room.
+userName = input("What is your name, adventurer?")
+p = Player(userName)
+print("Welcome to Jeff's Adventure Game, " + userName + "!")
+print("***")
+print("***")
+
+userInput = input("What do you do? (press q to quit)")
+while userInput != 'q':
+    print("Alright, " + userName + ", you are currently in " + p.location)
+    print(room[p.location].description)
+    print("***")
+    userInput = input("What do you do? (press q to quit)")
 
 # Write a loop that:
 #
