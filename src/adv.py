@@ -20,7 +20,11 @@ to north. The smell of gold permeates the air."""),
 
     'treasure': Room("Treasure Chamber", """You've found the long-lost treasure
 chamber! Sadly, it has already been completely emptied by
-earlier adventurers. The only exit is to the south."""),
+earlier adventurers.
+There seems to be a rock loose on the north wall..."""),
+
+    'hidden': Room("Hidden Room", """You found a hidden room behind the wall! It's
+    small, dark, and only has a single exit, from whence you came.""")
 }
 
 
@@ -34,21 +38,27 @@ room['overlook'].s_to = room['foyer']
 room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
+room['treasure'].n_to = room['hidden']
+room['hidden'].s_to = room['treasure']
 
-# make an item
+# make items
 room['foyer'].items = [Item("Flashlight", "This is a flashlight"), Item(
     "Laptop", "This could be pretty handy")]
+room['hidden'].items = [
+    Item("Shield_Key", "This key has an emblem of a skeleton on it.")]
 
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
+print("")
+print("So you seek to play a game, do you?")
+print("")
 userName = input("What is your name, adventurer? ")
 p = Player(userName, room['outside'])
 print("")
 print("Welcome to Jeff's Adventure Game, " + p.name + "!")
-print("")
 
 # helper functions
 
@@ -83,13 +93,22 @@ def get_item_helper(objct):
             p.items.append(item)
 
 
+def drop_item_helper(objct):
+    for item in p.items:
+        p.location.items.append(item)
+        p.items.remove(item)
+
+
 userInput = ['placeholder']
-keepGaming = True
-while keepGaming is True:
+while True:
     if len(p.items) > 0:
-        print("user has items")
+        print("")
+        print("You now have the following items:")
+        for item in p.items:
+            print("- " + item.name)
 
     # Print status
+    print("")
     print("Alright, " + userName +
           ", you are currently " + p.location.name)
     print(p.location.description)
@@ -108,7 +127,7 @@ while keepGaming is True:
 
     # act on input
     if userInput[0] == 'q':
-        exit()
+        exit(1)
 
     if len(userInput) == 1:
         movement_helper(userInput[0])
@@ -119,6 +138,9 @@ while keepGaming is True:
 
         if verb == "take":
             get_item_helper(objct)
+
+        if verb == "drop":
+            drop_item_helper(objct)
 
 
 # Write a loop that:
