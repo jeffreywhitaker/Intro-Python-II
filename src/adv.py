@@ -40,17 +40,42 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 userName = input("What is your name, adventurer?")
-p = Player(userName)
-print("Welcome to Jeff's Adventure Game, " + userName + "!")
-print("***")
-print("***")
+p = Player(userName, room['outside'])
+print("Welcome to Jeff's Adventure Game, " + p.name + "!")
 
-userInput = input("What do you do? (press q to quit)")
+# helper functions
+
+
+def movement_helper(keypress):
+    if keypress == 'w':
+        if hasattr(p.location, 'n_to'):
+            p.location = p.location.n_to
+        else:
+            print("A room does not exist in that direction")
+    if keypress == 'a':
+        if hasattr(p.location, 'w_to'):
+            p.location = p.location.w_to
+        else:
+            print("A room does not exist in that direction")
+    if keypress == 's':
+        if hasattr(p.location, 's_to'):
+            p.location = p.location.s_to
+        else:
+            print("A room does not exist in that direction")
+    if keypress == 'd':
+        if hasattr(p.location, 'e_to'):
+            p.location = p.location.e_to
+        else:
+            print("A room does not exist in that direction")
+
+
+userInput = ""
 while userInput != 'q':
-    print("Alright, " + userName + ", you are currently in " + p.location)
-    print(room[p.location].description)
+    print("Alright, " + userName + ", you are currently in " + p.location.name)
+    print(p.location.description)
     print("***")
-    userInput = input("What do you do? (press q to quit)")
+    userInput = input("What do you do? (wasd to move, q to quit)")
+    movement_helper(userInput)
 
 # Write a loop that:
 #
