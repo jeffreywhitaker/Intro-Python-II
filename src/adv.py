@@ -1,13 +1,14 @@
 from room import Room
 from player import Player
+from item import Item
 
 # Declare all the rooms
 
 room = {
-    'outside':  Room("Outside Cave Entrance",
-                     "North of you, the cave mount beckons"),
+    'outside':  Room("outside the entrace of a spooky cave!",
+                     "North of you, the cave mouth beckons ominously."),
 
-    'foyer':    Room("Foyer", """Dim light filters in from the south. Dusty
+    'foyer':    Room("standing in a dimly lit foyer.", """Dim light filters in from the south. Dusty
 passages run north and east."""),
 
     'overlook': Room("Grand Overlook", """A steep cliff appears before you, falling
@@ -34,14 +35,20 @@ room['narrow'].w_to = room['foyer']
 room['narrow'].n_to = room['treasure']
 room['treasure'].s_to = room['narrow']
 
+# make an item
+room['foyer'].items = [Item("Flashlight", "This is a flashlight"), Item(
+    "Laptop", "This could be pretty handy")]
+
 #
 # Main
 #
 
 # Make a new player object that is currently in the 'outside' room.
-userName = input("What is your name, adventurer?")
+userName = input("What is your name, adventurer? ")
 p = Player(userName, room['outside'])
+print("")
 print("Welcome to Jeff's Adventure Game, " + p.name + "!")
+print("")
 
 # helper functions
 
@@ -69,13 +76,50 @@ def movement_helper(keypress):
             print("A room does not exist in that direction")
 
 
-userInput = ""
-while userInput != 'q':
-    print("Alright, " + userName + ", you are currently in " + p.location.name)
+def get_item_helper(objct):
+    for item in p.location.items:
+        if objct == item.name.lower():
+            p.location.items.remove(item)
+            p.items.append(item)
+
+
+userInput = ['placeholder']
+keepGaming = True
+while keepGaming is True:
+    if len(p.items) > 0:
+        print("user has items")
+
+    # Print status
+    print("Alright, " + userName +
+          ", you are currently " + p.location.name)
     print(p.location.description)
-    print("***")
-    userInput = input("What do you do? (wasd to move, q to quit)")
-    movement_helper(userInput)
+    print("")
+    if len(p.location.items) > 0:
+        print(
+            f"You can see items in this room! You see:")
+        for item in p.location.items:
+            print("- " + item.name)
+        print("")
+    print("What do you do? ")
+
+    # collect input
+    userInput = input(
+        ">>> ").lower().split(" ")
+
+    # act on input
+    if userInput[0] == 'q':
+        exit()
+
+    if len(userInput) == 1:
+        movement_helper(userInput[0])
+
+    if len(userInput) == 2:
+        verb = userInput[0]
+        objct = userInput[1]
+
+        if verb == "take":
+            get_item_helper(objct)
+
 
 # Write a loop that:
 #
