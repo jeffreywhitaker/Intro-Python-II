@@ -42,23 +42,11 @@ room['treasure'].n_to = room['hidden']
 room['hidden'].s_to = room['treasure']
 
 # make items
+
 room['foyer'].items = [Item("Flashlight", "This is a flashlight"), Item(
     "Laptop", "This could be pretty handy")]
 room['hidden'].items = [
     Item("Shield_Key", "This key has an emblem of a skeleton on it.")]
-
-#
-# Main
-#
-
-# Make a new player object that is currently in the 'outside' room.
-print("")
-print("So you seek to play a game, do you?")
-print("")
-userName = input("What is your name, adventurer? ")
-p = Player(userName, room['outside'])
-print("")
-print("Welcome to Jeff's Adventure Game, " + p.name + "!")
 
 # helper functions
 
@@ -99,15 +87,30 @@ def drop_item_helper(objct):
         p.items.remove(item)
 
 
+# needs something in list to not break
 userInput = ['placeholder']
-while True:
-    if len(p.items) > 0:
-        print("")
-        print("You now have the following items:")
-        for item in p.items:
-            print("- " + item.name)
 
-    # Print status
+#
+# Main
+#
+
+# Make a new player object that is currently in the 'outside' room.
+print("""
+
+So you seek to play a game, do you?
+
+What is your name, adventurer?
+
+""")
+userName = input(">>> ")
+p = Player(userName, room['outside'])
+print("")
+print("Welcome to Jeff's Adventure Game, " + p.name + "!")
+
+# always loops until exit()
+while True:
+
+    # Print player location/status
     print("")
     print("Alright, " + userName +
           ", you are currently " + p.location.name)
@@ -136,11 +139,19 @@ while True:
         verb = userInput[0]
         objct = userInput[1]
 
+        # call a helper get/drop function and pass in objct
         if verb == "take":
             get_item_helper(objct)
 
         if verb == "drop":
             drop_item_helper(objct)
+
+        # if player has more than 0 items, print list to screen
+        if len(p.items) > 0:
+            print("""
+            You now have the following items:""")
+            for item in p.items:
+                print("- " + item.name)
 
 
 # Write a loop that:
